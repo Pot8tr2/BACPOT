@@ -22,6 +22,7 @@ void SysTick_Init(uint32_t tick_hz)
 }
 
 
+
 void SysTick_Handler(void)
 {
     system_ticks++;
@@ -63,12 +64,14 @@ int set_pin(GPIO_TypeDef *GPIOX, int pin, int high){
     return 0;
 }
 
+int get_GPIO_input(GPIO_TypeDef *GPIOX, int pin){
+    return ((GPIOX->IDR)&(1<<pin))>>pin;
+}
 
 
 
 int enable_pwm(){
     RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOAEN|RCC_AHB2ENR_GPIOBEN);
-
     // enable the tim clock
     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
     // set up the pwm pin mode.
@@ -184,7 +187,7 @@ int main()
     enable_gpio_output_motor(GPIOB,4);
     enable_gpio_output_motor(GPIOB,5);
 
-    // SysTick_Init(1000);
+    SysTick_Init(1000);
     enable_input_and_intetupts();
 
     // Create tasks.
@@ -192,13 +195,14 @@ int main()
     
 
     serial_write(USART2, prompt);
+    change_duty(2,500);
 
     for(;;){
         speed=RXBUFFER2[1];
         command=RXBUFFER2[0];
         // 
         // control_motors(command,speed<<1);
-        control_motors(command, 500);
+        // control_motors(command, 500);
         for(int i=0; i<10000;i++){
             int t=0;
         }

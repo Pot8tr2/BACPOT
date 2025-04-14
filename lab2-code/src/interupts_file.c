@@ -150,7 +150,10 @@ void EXTI0_IRQHandler(void){
 
         previous_state_enc1=cur_state;
         EXTI->PR1 |= EXTI_PR1_PIF0; //clear the interupt
-
+        if(enc_ticks1>2700 || enc_ticks1<-2700){
+            TIM1->CCR2=0;
+            TIM1->CCR1=0;
+        }
     }
 }
 
@@ -176,6 +179,10 @@ void EXTI1_IRQHandler(void){
         //     volatile int x=0;
         //     x=x+1;
         // }
+        if(enc_ticks1>2700 || enc_ticks1<-2700){
+            TIM1->CCR2=0;
+            TIM1->CCR1=0;
+        }
     }
 }
 
