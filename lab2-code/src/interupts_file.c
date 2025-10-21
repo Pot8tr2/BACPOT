@@ -1,12 +1,34 @@
 #include "interupts_file.h"
 
-// emcpder 1
+
+//quadrature encoder explanation
+//
+//   Line B  ____     ____
+//               |   |    |
+//               |___|    |___
+//              ___      _____
+//             |   |    |     |
+//   Line A   _|   |____|     |
+//these interupts have four states: when both lines are high, when B is low and A is high, 
+// when both states are low, and when B is high and A is low.
+//Essentially you can determine which way the wheel is turning by seeing which way it goes through these
+//if it goes: when both lines  high,  B low  A high, both states low, B  high  A  low.
+//you can tell that it is going ->
+//if it goes: B  high  A  low,A high, both states low,when both lines  high, B low  A high, B is low, .
+//now that you can tell the direction the motor is moving, you can determine the ticks it has.
+//along each of the | (edges) you can sample what the value both line A and B are at.
+// and then check which pattern -> or <- it is part of, 
+//At this |(edge) you would increase the ticks by +1 if -> or -1 if <-. 
+
+
+//these variables you can acess externally, so either make a getter for them or you can acess them directly in the other file
+// emcoder 1
 volatile int previous_state_enc1=0;
 volatile int enc_ticks1=0;
-// emcpder 2
+// emcoder 2
 volatile int previous_state_enc2=0;
 volatile int enc_ticks2=0;
-// emcpder 3
+// emcoder 3
 volatile int previous_state_enc3=0;
 volatile int enc_ticks3=0;
 // encoder 4
@@ -14,30 +36,30 @@ volatile int previous_state_enc4=0;
 volatile int enc_ticks4=0;
 
 
+//essentially enables an input pin
 
 int enable_input_pin(GPIO_TypeDef *GPIOX,int pin){
     RCC->AHB2ENR|=RCC_AHB2ENR_GPIOAEN|RCC_AHB2ENR_GPIOBEN|RCC_AHB2ENR_GPIOCEN;
     // enable the input mode of the pin
     GPIOX->MODER &= ~(0x3<<(pin<<1));
-    // enable the open drain of the pin NOT ANYMORE DO NOT DO THIS
+    //set the pin to be push pull mode
 
     GPIOX->OTYPER &= ~(0x1<<(pin));
-    // GPIOX->OTYPER |= (0x1<<pin);
-    // enable a pull up for the pin, may not be nessary. check tho if the encoders do need it
+    // no pull up or pulldown on this line
     GPIOX->PUPDR &= ~(0x3<<(pin<<1));
     // GPIOX->PUPDR |= 0x1<<(pin<<1);
     // set high speed
     GPIOX->OSPEEDR &= ~(0x3<<(pin<<1));
     GPIOX->OSPEEDR &= 0x2<<(pin<<1);
-
-    int var=(GPIOX->IDR & GPIO_IDR_IDR_0)>>GPIO_IDR_ID0_Pos;
-    var=var+1;
     return 0;
 }
 
 
 
+//this will enable the pins  to be set up for interupts.
+//the pins that are enabled are A7,A6,A5,A4,A3,A1,A0,A12
 int enable_input_and_intetupts(){
+    //enable all the pins
     enable_input_pin(GPIOA,7);
     enable_input_pin(GPIOA,6);
     enable_input_pin(GPIOA,5);
@@ -116,7 +138,7 @@ int enable_input_and_intetupts(){
     // encoder c
     EXTI->PR1 |= EXTI_PR1_PIF5;
     EXTI->PR1 |= EXTI_PR1_PIF6;
-    // set to be encoder d
+    //encoder d
     EXTI->PR1 |= EXTI_PR1_PIF7;
     EXTI->PR1 |= EXTI_PR1_PIF12;
 
@@ -124,18 +146,18 @@ int enable_input_and_intetupts(){
 }
 
 // how many ticks in a rotation????? iapparently 7 full cycles per rotation. 
-// this means that a single cycle is 1/28*360 degrees. 
-//or 0.224399475 rad. so like it could pause the pwm until aligned but that doesn't really work well. 
-// so if it's off by. also we can get the time with systick.
-//may also want to reset the ticks to be 0 when changing directions expecially for the pid. 
+//there is a 1:100 gear ratio on the motor. so essentially it is going to be 2800 ticks per cycle. 
+ 
 
+
+
+//these trigger along the edges | and | and check the state that the motor is moving.
+//if -> it will add +1 to the respective encoder ticks. 
+//if <- it will -1 from the respective encoder tick. 
 void EXTI0_IRQHandler(void){
 
     if (EXTI->PR1 & EXTI_PR1_PIF0) // Check if the interupt was triggered
     {
-        // variable for pulses per rotation variable
-
-        // return the state right
 
         // get the current state  of the encoder
 
@@ -149,7 +171,10 @@ void EXTI0_IRQHandler(void){
         enc_ticks1+=(diff_state-2)*(diff_state&0x1);
 
         previous_state_enc1=cur_state;
+
         EXTI->PR1 |= EXTI_PR1_PIF0; //clear the interupt
+
+        //this is just to stop the motor when the ticks are roughly around there
         if(enc_ticks1>2700 || enc_ticks1<-2700){
             TIM1->CCR2=0;
             TIM1->CCR1=0;
