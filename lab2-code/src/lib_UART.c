@@ -193,46 +193,6 @@ char UART_read (USART_TypeDef * USARTx) {
 
 
 
-// Very basic function: just give nBytes bytes to the UART, one byte at a time.
-// Spin wait after each byte until the UART is ready for the next byte.
-/*static void UART_write(USART_TypeDef *USARTx, const char *buffer) {
-    // The main flag we use is Tx Empty (TXE). The HW sets it when the
-    // transmit data register (TDR) is ready for more data. TXE is then
-    // cleared when we write new data in (by a write to the USART_DR reg).
-    // When the HW transfers the TDR into the shift register, it sets TXE=1.
-    for (unsigned int i = 0; buffer[i] != '\0'; i++)
-	UART_write_byte (USARTx, buffer[i]);
-
-    // RM0394 page 1203 says that you must wait for ISR.TC=1 before you shut
-    // off the USART. We wait over here... not needed for us, since we never
-    // shut off the USART anyway.
-    while (!(USARTx->ISR & USART_ISR_TC));
-    USARTx->ISR &= ~USART_ISR_TC;
-}*/
-
-// static void UART_write_byte(USART_TypeDef *USARTx, char data) {
-//     // spin-wait until the TXE (TX empty) bit is set
-//     while (!(USARTx->ISR & USART_ISR_TXE));
-    
-//     // Writing USART data register automatically clears the TXE flag 	
-//     USARTx->TDR = data & 0xFF;
-
-//     // Wait 300us or so, to let the HW clear TXE.
-//     USART_Delay (300);
-// }
-
-/*static void UART_write_byte_nonB (USART_TypeDef *USARTx, uint8_t data) {
-    // spin-wait until TXE (TX empty) bit is set
-    while (!(USARTx->ISR & USART_ISR_TXE))
-	vTaskDelay (1);
-
-    // Writing USART_DR automatically clears the TXE flag 	
-    USARTx->TDR = data & 0xFF;
-
-    // Wait 300us or so, to let the HW clear TXE.
-    USART_Delay (300);
-}*/
-
 // Assume that each usec of delay is about 13 times around the NOP loop.
 // That's probably about right at 80 MHz (maybe a bit too slow).
 static void USART_Delay(uint32_t us) {
@@ -286,8 +246,6 @@ void serial_begin (USART_TypeDef *USARTx) {
 
 char serial_read (USART_TypeDef *USARTx) {
     // The SR_RXNE (Read data register not empty) bit is set by hardware.
-    // We spin wait until that bit is set
-    // copy in from the buffer
 
     // Reading USART_DR automatically clears the RXNE flag 
     return ((char)(USARTx->RDR & 0xFF));
@@ -309,7 +267,7 @@ void USART1_IRQHandler(void)
     if (USART1->ISR & USART_ISR_TC)  
     {
         // clear the tc bit in the isr
-        USART1->ISR &= ~USART_ISR_TC;
+        USART1->ICR |= USART_ICR_TCCF;
         if (tx_int < len_string) {
             USART1->CR1 |= USART_CR1_TXEIE;  // Re-enable the TXE interrupt if more data is available
         }
@@ -340,7 +298,7 @@ void USART2_IRQHandler(void)
     if (USART2->ISR & USART_ISR_TC)  
     {
         // clear the tc bit in the isr
-        USART2->ISR &= ~USART_ISR_TC;
+        USART2->ICR |= USART_ICR_TCCF;
         if (tx_int2 < len_string2) {
             USART2->CR1 |= USART_CR1_TXEIE;  // Re-enable the TXE interrupt if more data is available
         }

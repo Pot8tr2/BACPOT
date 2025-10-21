@@ -16,9 +16,12 @@ extern volatile int enc_ticks3;
 extern volatile int previous_state_enc4;
 extern volatile int enc_ticks4;
 
-int enable_input_and_intetupts();
-int enable_input_pin(GPIO_TypeDef *GPIOX,int pin);
 
+// enable the input pins and the interupts
+int enable_input_and_intetupts();
+// enable the input pins for gpio.
+int enable_input_pin(GPIO_TypeDef *GPIOX,int pin);
+// interupt handlers. These handle the interupts to deal with the encoder rotation. 
 void EXTI0_IRQHandler(void);
 void EXTI1_IRQHandler(void);
 void EXTI1_IRQHandler(void);
