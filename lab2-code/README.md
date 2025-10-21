@@ -7,5 +7,7 @@ Check how many ticks are in a rotation.
 
 Create a scheme that takes in values from uart, and make it move specifically with each command.
 
-For the Turns have it start turning quickly and slow down as it gets closer to the specified degree angle. You can start out with this for 90 degrees. \nImplement Pid for the turns so it slows down as it gets closer to 90 degrees. Ie turns quickly and then more slowly. \n
+For the Turns have it start turning quickly and slow down as it gets closer to the specified degree angle. You can start out with this for 90 degrees. 
+--Implement Pid for the turns so it slows down as it gets closer to 90 degrees. 
+--Ie turns quickly and then more slowly. \n
 
