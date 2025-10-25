@@ -102,5 +102,5 @@ int change_duty(int channel,int duty){
 
 //git add .
 //git commit -m "app"
-//git push origin main
+//git push origin master
 
