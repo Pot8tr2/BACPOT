@@ -9,7 +9,7 @@
 //              ___      _____
 //             |   |    |     |
 //   Line A   _|   |____|     |
-//these interupts have four states: when both lines are high, when B is low and A is high, 
+//these interrupts have four states: when both lines are high, when B is low and A is high, 
 // when both states are low, and when B is high and A is low.
 //Essentially you can determine which way the wheel is turning by seeing which way it goes through these
 //if it goes: when both lines  high,  B low  A high, both states low, B  high  A  low.

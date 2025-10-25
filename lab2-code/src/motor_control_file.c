@@ -50,10 +50,10 @@ int enable_pwm(){
     // set up the pwm pin mode.
     
     // enable the pwm mode
-    set_gpio_alt_func(GPIOA,9,1);
-    set_gpio_alt_func(GPIOA,10,1);
-    set_gpio_alt_func(GPIOA,11,1);
-    set_gpio_alt_func(GPIOA,8,1);
+    set_gpio_alt_func(GPIOA,9,1); //A9 = enable B1 channel: 1, timer: 2 (left)
+    set_gpio_alt_func(GPIOA,10,1); //A10 = enable A1 channel: 1, timer: 3 (bottom)
+    set_gpio_alt_func(GPIOA,11,1); //A11 = enable A2 channel: 1, timer: 4 (right)
+    set_gpio_alt_func(GPIOA,8,1); //A8 = enable B2 channel: 1, timer: 1 (top)
 
     //config to high speed
     GPIOA->OSPEEDR |=   0x3<<(GPIO_OSPEEDR_OSPEED9_Pos)|0x3<<(GPIO_OSPEEDR_OSPEED10_Pos)|0x3<<(GPIO_OSPEEDR_OSPEED11_Pos)|0x3<<(GPIO_OSPEEDR_OSPEED8_Pos);
@@ -99,4 +99,8 @@ int change_duty(int channel,int duty){
     else if(channel==4)TIM1->CCR4=duty;
     return 0;
 }
+
+//git add .
+//git commit -m "app"
+//git push origin main
 
