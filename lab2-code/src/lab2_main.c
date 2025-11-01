@@ -58,10 +58,10 @@ int control_motors(char command, int speed, int ticks){
 
 
         //phase direction
-        set_pin(GPIOB, 0, 1); //J1 left
+        set_pin(GPIOB, 0, 1); //J1 left forward
         set_pin(GPIOB, 1, 0); //J2 bottom not moving
         set_pin(GPIOB, 4, 0); //J3 top not moving
-        set_pin(GPIOB, 5, 1); //J4 right
+        set_pin(GPIOB, 5, 1); //J4 right forward
     }else if(command == 'b'){ //backward
         //directions
         set_pin(GPIOB, 0, 0); //J1 left backward
@@ -69,15 +69,15 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 4, 1); //J3 top not moving
         set_pin(GPIOB, 5, 0); //J4 right backward
     }else if(command == 'r'){ //right
-        set_pin(GPIOB, 0, 0); 
-        set_pin(GPIOB, 1, 1); 
-        set_pin(GPIOB, 4, 0);
-        set_pin(GPIOB, 5, 1);
+        set_pin(GPIOB, 0, 0); //J1 left not moving
+        set_pin(GPIOB, 1, 1); //J2 bottom forward
+        set_pin(GPIOB, 4, 1); //J3 top forward
+        set_pin(GPIOB, 5, 0); //J4 right not moving
     }else if(command = 'l'){ //left
-        set_pin(GPIOB, 0, 0); 
-        set_pin(GPIOB, 1, 1); 
-        set_pin(GPIOB, 4, 0);
-        set_pin(GPIOB, 5, 1);
+        set_pin(GPIOB, 0, 1); // J1 left not moving
+        set_pin(GPIOB, 1, 0); //J2 bottom backward
+        set_pin(GPIOB, 4, 0); //J3 top backward
+        set_pin(GPIOB, 5, 1); //J4 right not moving
     }
 }
 
