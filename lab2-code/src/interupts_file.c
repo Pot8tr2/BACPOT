@@ -204,10 +204,10 @@ void EXTI1_IRQHandler(void){
         //     volatile int x=0;
         //     x=x+1;
         // }
-        if(enc_ticks1>2700 || enc_ticks1<-2700){
-            TIM1->CCR2=0;
-            TIM1->CCR1=0;
-        }
+        // if(enc_ticks1>2700 || enc_ticks1<-2700){
+        //     TIM1->CCR2=0;
+        //     TIM1->CCR1=0;
+        // } look up quadrature encoder ticks
     }
 }
 
