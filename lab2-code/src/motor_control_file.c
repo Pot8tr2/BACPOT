@@ -50,9 +50,9 @@ int enable_pwm(){
     // set up the pwm pin mode.
     
     // enable the pwm mode
-    set_gpio_alt_func(GPIOA,9,1); //A9 = enable B1 channel: 1, timer: 2 (left)
-    set_gpio_alt_func(GPIOA,10,1); //A10 = enable A1 channel: 1, timer: 3 (bottom)
-    set_gpio_alt_func(GPIOA,11,1); //A11 = enable A2 channel: 1, timer: 4 (right)
+    set_gpio_alt_func(GPIOA,9,1); //A9 = enable B1 channel: 2, timer: 1 (left)
+    set_gpio_alt_func(GPIOA,10,1); //A10 = enable A1 channel: 3, timer: 1 (bottom)
+    set_gpio_alt_func(GPIOA,11,1); //A11 = enable A2 channel: 4, timer: 1 (right)
     set_gpio_alt_func(GPIOA,8,1); //A8 = enable B2 channel: 1, timer: 1 (top)
 
     //config to high speed

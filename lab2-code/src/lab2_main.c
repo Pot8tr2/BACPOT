@@ -50,12 +50,12 @@ uint64_t cur_time_ms(void){
 // extern volatile int previous_state_enc4;
 // extern volatile int enc_ticks4;
 int control_motors(char command, int speed, int ticks){
-    change_duty(1, speed); //they all share a channel..?
-
-    //Use phase
     if(command == 'f'){ //forward
         //enable speed
-
+        change_duty(1, 0); //top
+        change_duty(2, speed); //left
+        change_duty(3, 0); //bottom
+        change_duty(4, speed); //right
 
         //phase direction
         set_pin(GPIOB, 0, 1); //J1 left forward
@@ -63,17 +63,34 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 4, 0); //J3 top not moving
         set_pin(GPIOB, 5, 1); //J4 right forward
     }else if(command == 'b'){ //backward
+        //speed
+        change_duty(1, 0); //top
+        change_duty(2, speed); //left
+        change_duty(3, 0); //bottom
+        change_duty(4, speed); //right
         //directions
         set_pin(GPIOB, 0, 0); //J1 left backward
         set_pin(GPIOB, 1, 1); //J2 bottom not moving
         set_pin(GPIOB, 4, 1); //J3 top not moving
         set_pin(GPIOB, 5, 0); //J4 right backward
     }else if(command == 'r'){ //right
+        //speed
+        change_duty(1, speed); //top
+        change_duty(2, 0); //left
+        change_duty(3, speed); //bottom
+        change_duty(4, 0); //right
+        //direction
         set_pin(GPIOB, 0, 0); //J1 left not moving
         set_pin(GPIOB, 1, 1); //J2 bottom forward
         set_pin(GPIOB, 4, 1); //J3 top forward
         set_pin(GPIOB, 5, 0); //J4 right not moving
     }else if(command = 'l'){ //left
+        //speed
+        change_duty(1, speed); //top
+        change_duty(2, 0); //left
+        change_duty(3, speed); //bottom
+        change_duty(4, 0); //right
+        //direction
         set_pin(GPIOB, 0, 1); // J1 left not moving
         set_pin(GPIOB, 1, 0); //J2 bottom backward
         set_pin(GPIOB, 4, 0); //J3 top backward
