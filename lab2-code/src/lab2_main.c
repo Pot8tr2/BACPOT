@@ -85,10 +85,10 @@ int main()
     //enable pwm
     enable_pwm();
     // init the gpio for the motors
-    enable_gpio_output_motor(GPIOB,1); //Phase A1
-    enable_gpio_output_motor(GPIOB,0); //Phase B1
-    enable_gpio_output_motor(GPIOB,4); //Phase B2
-    enable_gpio_output_motor(GPIOB,5); //Phase A2
+    enable_gpio_output_motor(GPIOB,1); //Phase A1 - bottom
+    enable_gpio_output_motor(GPIOB,0); //Phase B1 - left
+    enable_gpio_output_motor(GPIOB,4); //Phase B2 - top
+    enable_gpio_output_motor(GPIOB,5); //Phase A2 - right
     //enable the clock so can check how long actions have taken
     SysTick_Init(1000);
     //enable interupts
