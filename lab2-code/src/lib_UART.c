@@ -267,7 +267,8 @@ void USART1_IRQHandler(void)
     if (USART1->ISR & USART_ISR_TC)  
     {
         // clear the tc bit in the isr
-        USART1->ICR |= USART_ICR_TCCF;
+        USART1->ISR &= ~USART_ISR_TC;
+        //USART1->ICR |= USART_ICR_TCCF;
         if (tx_int < len_string) {
             USART1->CR1 |= USART_CR1_TXEIE;  // Re-enable the TXE interrupt if more data is available
         }

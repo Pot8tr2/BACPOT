@@ -6,6 +6,7 @@
 #include "stm32l4xx_hal.h"
 #include "interupts_file.h"
 #include "motor_control_file.h"
+#include <stdio.h>
 
 
 int speed=0;
@@ -50,6 +51,7 @@ uint64_t cur_time_ms(void){
 // extern volatile int previous_state_enc4;
 // extern volatile int enc_ticks4;
 int control_motors(char command, int speed, int ticks){
+    printf("function called\n");
     if(command == 'f'){ //forward
         //enable speed
         change_duty(1, 0); //top
@@ -100,6 +102,7 @@ int control_motors(char command, int speed, int ticks){
 
 int main()
 {
+    printf("in main\n");
     //set the clock to 80 mhz
     clock_setup_80MHz(); 
     //set the uart to start
@@ -128,7 +131,11 @@ int main()
         command=RXBUFFER2[0];
         // TODO: CALL THIS FUNCTION WITH HOWEVER YOU WANT TO MODIFY IT
         //call control motors here based on the input from the buffer.
-        // control_motors(char command, int speed, int ticks);
+        char command = 'f';
+        int speed = 300;
+        int ticks = 1;
+        printf("first for loop\n");
+        control_motors(command, speed, ticks);
         for(int i=0; i<10000;i++){
             int t=0;
         }
