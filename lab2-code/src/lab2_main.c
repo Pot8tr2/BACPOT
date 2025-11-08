@@ -124,15 +124,15 @@ int main()
     
 
     serial_write(USART2, prompt);
-    change_duty(2,500);
+    change_duty(2,0);
     //main loop
     for(;;){
         speed=RXBUFFER2[1];
         command=RXBUFFER2[0];
         // TODO: CALL THIS FUNCTION WITH HOWEVER YOU WANT TO MODIFY IT
         //call control motors here based on the input from the buffer.
-        char command = 'f';
-        int speed = 300;
+        char command = 'r';
+        int speed = 100;
         int ticks = 1;
         printf("first for loop\n");
         control_motors(command, speed, ticks);
