@@ -62,6 +62,7 @@
     "task.h": "c",
     "stdbool.h": "c",
     "stm32l432xx.h": "c",
-    "stm32l4xx_hal_rcc.h": "c"
+    "stm32l4xx_hal_rcc.h": "c",
+    "motor_control_file.h": "c"
   }
 }

@@ -10,18 +10,14 @@
 int enable_gpio_output_motor(GPIO_TypeDef *GPIOX,int pin){
     RCC->AHB2ENR|=RCC_AHB2ENR_GPIOAEN|RCC_AHB2ENR_GPIOBEN|RCC_AHB2ENR_GPIOCEN;
 
-    unsigned int b0 = 1<<(pin<<1);	// bit 0 of this pin's two-bit field
-    GPIOX->MODER &= ~(b0<<1);		// Clear the field's bit 1
-    GPIOX->MODER |= b0;	
+    // unsigned int b0 = 1<<(pin<<1);	// bit 0 of this pin's two-bit field
+    GPIOX->MODER  &= ~((0x3<<(2*pin)));	// Clear bits
+    GPIOX->MODER   |=   (0x1<<(2*pin));
+
 
     GPIOX->OSPEEDR |=   0x2<<(2*pin);
-    // Both PA2 and PA15 are in pullup/down mode 01, which means pull-up only.
-    // This is arguably not needed. During normal operation, we're doing push-
-    // pull drive and so don't need a pullup or pulldown. Some people like a
-    // pullup to stop the data line from bouncing during reset before any MCU
-    // drives it -- but our pullup won't turn on until this code runs, anyway!
     GPIOX->PUPDR   &= ~((0x3<<(2*pin)));	// Clear bits
-    GPIOX->PUPDR   |=   (0x1<<(2*pin));	// Set each to 01.
+    // GPIOX->PUPDR   |=   (0x1<<(2*pin));	// Set each to 01.
     // Both PA2 and PA15 are push-pull (which is the reset default, anyway).
     GPIOX->OTYPER  &= ~((0x1<<(pin)));	// Clear bits
     // set it to default high
@@ -79,16 +75,23 @@ int enable_pwm(){
     TIM1->CCMR1 |= TIM_CCMR1_OC2PE | TIM_CCMR1_OC1PE;
     TIM1->CCMR2 |= TIM_CCMR2_OC4PE | TIM_CCMR2_OC3PE;
 
-    TIM1->CCR2 = 500;
-    TIM1->CCR1 =500;
-    TIM1->CCR3 =500;
-    TIM1->CCR4=500;
+    TIM1->CCR2 = 0;
+    TIM1->CCR1 =0;
+    TIM1->CCR3 =0;
+    TIM1->CCR4=0;
 
     TIM1->CCER |= TIM_CCER_CC2E|TIM_CCER_CC1E|TIM_CCER_CC3E|TIM_CCER_CC4E;
 
+
+    TIM1->CCER &= ~TIM_CCER_CC3NE;
+
     TIM1->BDTR |= TIM_BDTR_MOE;
 
+
+    
     TIM1->CR1 |= TIM_CR1_CEN;  
+
+
     return 0;
 }
 

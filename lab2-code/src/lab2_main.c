@@ -58,21 +58,12 @@ int control_motors(char command, int speed, int ticks){
         change_duty(3, 0); //bottom
         change_duty(4, speed); //right
 
-        //phase direction
-        set_pin(GPIOB, 0, 1); //J1 left forward
-        set_pin(GPIOB, 1, 0); //J2 bottom not moving
-        set_pin(GPIOB, 4, 0); //J3 top not moving
-        set_pin(GPIOB, 5, 1); //J4 right forward
-    }else if(command == 'b'){ //backward
-        //speed
-        change_duty(1, 0); //top
-        change_duty(2, speed); //left
-        change_duty(3, 0); //bottom
+    //phase directionq1 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1!!!!!!!!!!!!!!!!!~Q1  ~aaA //bottom
         change_duty(4, speed); //right
         //directions
-        set_pin(GPIOB, 0, 0); //J1 left backward
-        set_pin(GPIOB, 1, 1); //J2 bottom not moving
-        set_pin(GPIOB, 4, 1); //J3 top not moving
+        set_pin(GPIOB, 0, 1); //J1 left backward
+        set_pin(GPIOB, 1, 0); //J2 bottom not moving
+        set_pin(GPIOB, 4, 0); //J3 top not moving
         set_pin(GPIOB, 5, 0); //J4 right backward
     }else if(command == 'r'){ //right
         //speed
@@ -81,10 +72,10 @@ int control_motors(char command, int speed, int ticks){
         change_duty(3, speed); //bottom
         change_duty(4, 0); //right
         //direction
-        set_pin(GPIOB, 0, 0); //J1 left not moving
+        set_pin(GPIOB, 0, 1); //J1 left not moving
         set_pin(GPIOB, 1, 1); //J2 bottom forward
         set_pin(GPIOB, 4, 1); //J3 top forward
-        set_pin(GPIOB, 5, 0); //J4 right not moving
+        set_pin(GPIOB, 5, 1); //J4 right not moving
     }else if(command == 'l'){ //left
         //speed
         change_duty(1, speed); //top
@@ -92,10 +83,11 @@ int control_motors(char command, int speed, int ticks){
         change_duty(3, speed); //bottom
         change_duty(4, 0); //right
         //direction
-        set_pin(GPIOB, 0, 1); // J1 left not moving
+        set_pin(GPIOB, 0, 0); // J1 left not moving
         set_pin(GPIOB, 1, 0); //J2 bottom backward
         set_pin(GPIOB, 4, 0); //J3 top backward
-        set_pin(GPIOB, 5, 1); //J4 right not moving
+       set_pin(GPIOB, 5, 0); //J4 right not moving
+
     }else if(command == 's'){ //left
         //speed
         change_duty(1, 0); //top
@@ -107,11 +99,12 @@ int control_motors(char command, int speed, int ticks){
         set_pin(GPIOB, 1, 0); //J2 bottom backward
         set_pin(GPIOB, 4, 0); //J3 top backward
         set_pin(GPIOB, 5, 1); //J4 right not moving
-    }else{
-        change_duty(1, 0); //top
-        change_duty(2, 0); //left
-        change_duty(3, 0); //bottom
-        change_duty(4, 0); //right
+    }
+    else{
+        change_duty(1, 1); //top
+        change_duty(2, 1); //left
+        change_duty(3, 1); //bottom
+        change_duty(4, 1); //right
         //direction
         set_pin(GPIOB, 0, 1); // J1 left not moving
         set_pin(GPIOB, 1, 0); //J2 bottom backward
@@ -131,11 +124,12 @@ int main()
     serial_begin(USART2);
     //enable pwm
     enable_pwm();
+
     // init the gpio for the motors
-    enable_gpio_output_motor(GPIOB,1);
-    enable_gpio_output_motor(GPIOB,0);
     enable_gpio_output_motor(GPIOB,4);
     enable_gpio_output_motor(GPIOB,5);
+    enable_gpio_output_motor(GPIOB,0);
+    enable_gpio_output_motor(GPIOB,1);
     //enable the clock so can check how long actions have taken
     SysTick_Init(1000);
     //enable interupts
@@ -146,8 +140,9 @@ int main()
     
 
     // serial_write(USART2, prompt);
-    change_duty(2,500);
+    // change_duty(2,500);
     //main loop
+
     for(;;){
         speed=RXBUFFER2[1];
         command=RXBUFFER2[0];
@@ -156,13 +151,16 @@ int main()
         // TODO: CALL THIS FUNCTION WITH HOWEVER YOU WANT TO MODIFY IT
         //call control motors here based on the input from the buffer.
         control_motors(command, 300,0);
+
         // serial_write(USART2,prompt);
         for(int i=0; i<100000;i++){
             int t=0;
-        }
+        // }
         // memcpy(prompt,(int*)(TIM1->CNT),strlen(prompt));
         // serial_write(USART2, prompt);
         
     }
 
+}
+return 0;
 }
